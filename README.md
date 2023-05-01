@@ -77,11 +77,18 @@ const query = IDBKeyRange.lowerBound(100); // you can also pass strings as query
 
 import IndexedDBObjectStore from "simple-indexeddb"
 
-const store = await new IndexedDBObjectStore("my-db", "my-store")
+let store = await new IndexedDBObjectStore("my-db", "my-store")
+
+// Properties
+console.log(store.db, store.dbname, store.objectstorename)
 
 // Instance Methods:
-await store.add(key, data); // use to add key value pairs
-await store.put(key, data); // use to update key value pairs
+await store.add(data, key); // use to add key value pairs
+await store.put(data, key); // use to update key value pairs
+
+await store.add(data); 
+await store.put(data); // leave our key if your key mode allows it 
+
 await store.get(key);
 await store.getJson(key);
 await store.delete(key);
@@ -96,8 +103,8 @@ await store.count();
 await store.count(query);
 await store.clear();
 
-// Properties
-console.log(store.db, store.dbname, store.objectstorename)
+// specify create options if a store maybe doesn't exist
+const mystoreai = await new IndexedDBObjectStore("my-db", "my-storeai", {autoIncrement: true})
 ```
 
 Feel free to submit a pull request.

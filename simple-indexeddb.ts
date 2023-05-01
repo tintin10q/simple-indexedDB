@@ -13,31 +13,46 @@ function makePromise() {
     }
 }
 
+type CreateOptions = {
+    autoIncrement?: boolean;
+    keyPath?: string;
+}
 
 /**
  * @class IndexeDBObjectStore
  * A simple promise based wrapper for an indexedDB object store
  * @param {string} dbname - The name of the database you want to open
  * @param {string} dbname - The name of the objectstore you want to open
+ * @param {CreateOptions} options - If the object store does not exist we attempt to create it. Here you can pass autoIncrement and or keyPath. You don't need this if you're sure the objectStore already exists. For more info see [Structuring the database on mdn](https://developer.mozilla.org/en-US/docs/Web/API/IndexedDB_API/Using_IndexedDB#structuring_the_database
  *
  * You can have multiple databases each with multiple object stores. Each object store can hold key value pair objects.
  * You can query these key value pairs using strings or using IDBKeyRange (https://developer.mozilla.org/en-US/docs/Web/API/IDBKeyRange)
  */
-export class IndexedDBObjectStore {
+class IndexedDBObjectStore {
     db: IDBDatabase;
     dbname: string;
     objectstorename: string;
 
-    constructor(dbname: string, objectstorename: string) {
+    constructor(dbname: string, objectstorename: string, createOptions?: CreateOptions) {
         const {
             promise,
             reject,
             resolve
         } = makePromise();
         let request = indexedDB.open(dbname);
+        request.onupgradeneeded = (event) => {
+            this.db = event.target.result;
+            if (!this.db.objectStoreNames.contains(objectstorename)) {
+                this.db.createObjectStore(objectstorename, createOptions);
+            }
+            // resolve(this);
+        }
         request.onerror = reject;
         request.onsuccess = (event) => {
             this.db = event.target.result;
+            // turn on if you want db to automatically close on version change,
+            // if you leave it off tabs have to be reloaded before version change can happen or manual close
+            // this.db.onversionchange = () => this.db.close();
             resolve(this);
         };
         this.dbname = dbname;
@@ -61,7 +76,7 @@ export class IndexedDBObjectStore {
         transaction.onsuccess = (event) => {
             try {
                 let store = event.target.result;
-                if (typeof store === "undefined") throw `${key} is undefined`;
+                if (typeof store === "undefined") reject(`${key} is undefined`);
                 resolve(JSON.parse(store));
             } catch (e) {
                 reject(`Could not parse ${key} in object store: ${e}`);
@@ -95,10 +110,11 @@ export class IndexedDBObjectStore {
 
     /**
      * Save data for a key in the store. Replaces data already there.
-     * @param {string} key
+     * Based on your [Key mode](https://developer.mozilla.org/en-US/docs/Web/API/IndexedDB_API/Using_IndexedDB#structuring_the_database) you should include a key or not.
      * @param {any} data
+     * @param {IDBValidKey|undefined} key
      */
-    async put(key: IDBValidKey, data: any): Promise<string> {
+    async put(data: any, key?: IDBValidKey,): Promise<string> {
         const {
             promise,
             reject,
@@ -113,20 +129,22 @@ export class IndexedDBObjectStore {
     }
 
     /**
-     * Add new key value pair to the store
-     * @param {string} key
-     * @param {any} value
+     * Add new key value pair to the store.
+     * Based on your [Key mode](https://developer.mozilla.org/en-US/docs/Web/API/IndexedDB_API/Using_IndexedDB#structuring_the_database) you should include a key or not.
+     * @param {any} data - data to save
+     * @param {IDBValidKey|undefined} key - Key under which to save, can be undefined
      */
-    async add(key: IDBValidKey, data: any) {
+    async add(data: any, key?: IDBValidKey) {
         const {
             promise,
             reject,
             resolve
         } = makePromise();
 
-        const transactiont = this.db.transaction([this.objectstorename], "readwrite").objectStore(this.objectstorename);
-        console.log(transactiont);
-        const transaction = transactiont.put(data, key);
+        const transaction = this.db
+            .transaction([this.objectstorename], "readwrite")
+            .objectStore(this.objectstorename)
+            .add(data, key);
 
         transaction.onsuccess = (event) => resolve(event.target.result);
         transaction.onerror = reject;
