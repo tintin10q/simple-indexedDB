@@ -4,6 +4,8 @@ A simple indexedDB wrapper.
 
 Right now this code only works when you have already created the databases and objectstores and they are of not of the [keyPath or autoIncrement](https://developer.mozilla.org/en-US/docs/Web/API/IndexedDB_API/Using_IndexedDB#structuring_the_database) kind. You can only make changes to the database in the db.onupgradeneeded event which only gets fired when you open the database with a higher version. The idea would be that the code here detects if you want an object store of a name that does not exist yet and if it doesn't exist yet we should open the database with a higher version to make this store. Then we have a seperate class for autoIncrement. 
 
+Also look at  [db.onversionchange](https://developer.mozilla.org/en-US/docs/Web/API/IndexedDB_API/Using_IndexedDB#version_changes_while_a_web_app_is_open_in_another_tab)
+
 ## Usage
 
 ```js
