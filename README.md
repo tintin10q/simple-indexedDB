@@ -104,7 +104,13 @@ await store.count(query);
 await store.clear();
 
 // specify create options if a store maybe doesn't exist
-const mystoreai = await new IndexedDBObjectStore("my-db", "my-storeai", {autoIncrement: true})
+const mystoreai = await new IndexedDBObjectStore("my-db", "my-storeai", {autoIncrement: true, version: 2})
+// if this creates a new store you have to increase the version again
+const apples = await new IndexedDBObjectStore("my-db", "my-storeai", {autoIncrement: true, version: 3})
 ```
+
+## Todo 
+
+- [] `createObjectStores()` function to create multiple object stores in one go (if they don't exist yet).
 
 Feel free to submit a pull request.

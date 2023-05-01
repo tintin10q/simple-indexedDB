@@ -16,6 +16,7 @@ function makePromise() {
 type CreateOptions = {
     autoIncrement?: boolean;
     keyPath?: string;
+    version?: number;
 }
 
 /**
@@ -39,7 +40,7 @@ class IndexedDBObjectStore {
             reject,
             resolve
         } = makePromise();
-        let request = indexedDB.open(dbname);
+        let request = indexedDB.open(dbname, createOptions?.version);
         request.onupgradeneeded = (event) => {
             this.db = event.target.result;
             if (!this.db.objectStoreNames.contains(objectstorename)) {

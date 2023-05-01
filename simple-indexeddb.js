@@ -28,7 +28,7 @@ class IndexedDBObjectStore {
     objectstorename;
     constructor(dbname, objectstorename, createOptions) {
         const { promise, reject, resolve } = makePromise();
-        let request = indexedDB.open(dbname);
+        let request = indexedDB.open(dbname, createOptions?.version);
         request.onupgradeneeded = (event) => {
             this.db = event.target.result;
             if (!this.db.objectStoreNames.contains(objectstorename)) {
