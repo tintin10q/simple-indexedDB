@@ -21,7 +21,7 @@ function makePromise() {
  * You can have multiple databases each with multiple object stores. Each object store can hold key value pair objects.
  * You can query these key value pairs using strings or using IDBKeyRange (https://developer.mozilla.org/en-US/docs/Web/API/IDBKeyRange)
  */
-export class IndexeDBObjectStore {
+export class IndexedDBObjectStore {
     constructor(dbname, objectstorename) {
         const {promise, reject, resolve} = makePromise()
         let request = indexedDB.open(dbname)
@@ -219,4 +219,4 @@ export class IndexeDBObjectStore {
     }
 }
 
-export default IndexeDBObjectStore
+export default IndexedDBObjectStore

@@ -5,10 +5,10 @@ A simple indexedDB wrapper.
 ## Usage
 
 ```js
-import IndexeDBObjectStore from "IndexeDBObjectStore"
+import IndexedDBObjectStore from "simple-indexeddb"
 // or just copy the code into your file its only ~200 lines of code
 
-const store = await new IndexeDBObjectStore("my-db", "my-store")
+const store = await new IndexedDBObjectStore("my-db", "my-store")
 await store.put("test", 137)
 console.log(await store.get("test")) // 137
 ```
@@ -49,9 +49,9 @@ This project reduces this boiler plates to a nice single promise based class. Th
 can access the IDBObjectStore class directly without having to think about creating transactions:
 
 ```js
-import IndexeDBObjectStore from "IndexeDBObjectStore.ts"
+import IndexedDBObjectStore from "simple-indexeddb"
 
-const store = await new IndexeDBObjectStore("my-db", "my-store")
+const store = await new IndexedDBObjectStore("my-db", "my-store")
 await store.put('test', 137)
 console.log(await store.get('test')) // 137
 ```
@@ -61,8 +61,8 @@ makes it a lot harder to run into uncommited transactions.
 
 The class is only
 about ~200 lines of code, and you could take out the methods you don't need. This allows for just dropping the code in
-your project without having to install it as a dependency. There is a [simple-indexedb.ts](./simple-indexedb.ts)
-and [simple-indexedb.js](./simple-indexedb.js) version.
+your project without having to install it as a dependency. There is a [simple-indexeddb.ts](./simple-indexeddb.ts)
+and [simple-indexeddb.js](./simple-indexeddb.js) version.
 
 ## Interface:
 
@@ -75,9 +75,9 @@ const key = "Test";
 const data = 137;
 const query = IDBKeyRange.lowerBound(100); // you can also pass strings as query
 
-import IndexeDBObjectStore from "IndexeDBObjectStore.ts"
+import IndexedDBObjectStore from "simple-indexeddb"
 
-const store = await new IndexeDBObjectStore("my-db", "my-store")
+const store = await new IndexedDBObjectStore("my-db", "my-store")
 
 // Instance Methods:
 await store.add(key, data); // use to add key value pairs
