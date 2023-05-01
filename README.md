@@ -2,6 +2,8 @@
 
 A simple indexedDB wrapper.
 
+Right now this code only works when you have already created the databases and objectstores and they are of not of the [keyPath or autoIncrement](https://developer.mozilla.org/en-US/docs/Web/API/IndexedDB_API/Using_IndexedDB#structuring_the_database) kind. 
+
 ## Usage
 
 ```js
