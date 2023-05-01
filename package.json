@@ -1,0 +1,16 @@
+{
+  "name": "simple-indexedb",
+  "version": "1.0.0",
+  "author": "tintin10q",
+  "description": "A simple indexedDB wrapper",
+  "license": "GNU-GPL-v3",
+  "files": [
+    "simple-indexedb.js",
+    "simple-indexedb.ts"
+  ],
+  "readme": "README.md",
+  "keywords": [
+    "indexedDB",
+    "simple"
+  ]
+}
