@@ -18,7 +18,7 @@ console.log(await store.get("test")) // 137
 There is a bunch of annoying ugly boilerplate involved when dealing
 with [IndexedDB API](https://developer.mozilla.org/en-US/docs/Web/API/IndexedDB_API). When dealing with the IndexedDB
 you want an instance of the [IDBObjectStore](https://developer.mozilla.org/en-US/docs/Web/API/IDBObjectStore) class. But
-to get there one has to deal with the aforementioned boilerplate:
+to get it you have to go through this:
 
 ```js 
 // writing and reading indexdb in vanilla js
