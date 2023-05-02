@@ -49,7 +49,7 @@ class IndexedDBObjectStore {
      * Get an object store and parse it as json (if it was text)
      * @param {string} key
      */
-    async getJson(key) {
+    getJson(key) {
         const { promise, reject, resolve } = makePromise();
         const transaction = this.db.transaction([this.objectstorename]).objectStore(this.objectstorename).get(key);
         transaction.onsuccess = (event) => {
@@ -69,7 +69,7 @@ class IndexedDBObjectStore {
      * Get the value stored under a key or key range
      * @param {IDBValidKey | IDBKeyRange} key
      */
-    async get(key) {
+    get(key) {
         const { promise, reject, resolve } = makePromise();
         const transaction = this.db.transaction([this.objectstorename]).objectStore(this.objectstorename).get(key);
         transaction.onsuccess = (event) => {
@@ -88,7 +88,7 @@ class IndexedDBObjectStore {
      * @param {any} data
      * @param {IDBValidKey|undefined} key
      */
-    async put(data, key) {
+    put(data, key) {
         const { promise, reject, resolve } = makePromise();
         const transaction = this.db.transaction([this.objectstorename], "readwrite").objectStore(this.objectstorename).put(data, key);
         transaction.onsuccess = (event) => resolve(event.target.result);
@@ -101,7 +101,7 @@ class IndexedDBObjectStore {
      * @param {any} data - data to save
      * @param {IDBValidKey|undefined} key - Key under which to save, can be undefined
      */
-    async add(data, key) {
+    add(data, key) {
         const { promise, reject, resolve } = makePromise();
         const transaction = this.db
             .transaction([this.objectstorename], "readwrite")
@@ -117,7 +117,7 @@ class IndexedDBObjectStore {
      * @param {undefined|IDBKeyRange} query - Optional query
      * @param {undefined|number} count - Number of things to return
      */
-    async getAll(query, count) {
+    getAll(query, count) {
         const { promise, reject, resolve } = makePromise();
         const transaction = this.db.transaction([this.objectstorename]).objectStore(this.objectstorename).getAll(query, count);
         transaction.onsuccess = (event) => resolve(event.target.result);
@@ -181,6 +181,15 @@ class IndexedDBObjectStore {
         transaction.onerror = reject;
         return promise;
     }
+    /**
+     * Closes the database connection.
+     * The close() method of the IDBDatabase interface returns immediately and closes the connection in a separate thread.
+     * The connection is not actually closed until all transactions created using this connection are complete.
+     * No new transactions can be created for this connection once this method is called.
+     * Methods that create transactions throw an exception if a closing operation is pending.
+     */
+    close() {
+        this.db.close();
+    }
 }
-
 export default IndexedDBObjectStore;

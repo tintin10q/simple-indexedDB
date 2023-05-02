@@ -68,7 +68,7 @@ class IndexedDBObjectStore {
      * Get an object store and parse it as json (if it was text)
      * @param {string} key
      */
-    async getJson(key: IDBValidKey) {
+    getJson(key: IDBValidKey) {
         const {
             promise,
             reject,
@@ -93,7 +93,7 @@ class IndexedDBObjectStore {
      * Get the value stored under a key or key range
      * @param {IDBValidKey | IDBKeyRange} key
      */
-    async get(key: IDBValidKey | IDBKeyRange) {
+    get(key: IDBValidKey | IDBKeyRange) {
         const {
             promise,
             reject,
@@ -118,7 +118,7 @@ class IndexedDBObjectStore {
      * @param {any} data
      * @param {IDBValidKey|undefined} key
      */
-    async put(data: any, key?: IDBValidKey,): Promise<string> {
+    put(data: any, key?: IDBValidKey) {
         const {
             promise,
             reject,
@@ -138,7 +138,7 @@ class IndexedDBObjectStore {
      * @param {any} data - data to save
      * @param {IDBValidKey|undefined} key - Key under which to save, can be undefined
      */
-    async add(data: any, key?: IDBValidKey) {
+    add(data: any, key?: IDBValidKey) {
         const {
             promise,
             reject,
@@ -161,7 +161,7 @@ class IndexedDBObjectStore {
      * @param {undefined|IDBKeyRange} query - Optional query
      * @param {undefined|number} count - Number of things to return
      */
-    async getAll(query?: IDBKeyRange | IDBValidKey, count?: number): Promise<unknown> {
+    getAll(query?: IDBKeyRange | IDBValidKey, count?: number) {
         const {
             promise,
             reject,
@@ -259,6 +259,17 @@ class IndexedDBObjectStore {
         transaction.onsuccess = (event) => resolve(event);
         transaction.onerror = reject;
         return promise;
+    }
+
+    /**
+     * Closes the database connection.
+     * The close() method of the IDBDatabase interface returns immediately and closes the connection in a separate thread.
+     * The connection is not actually closed until all transactions created using this connection are complete.
+     * No new transactions can be created for this connection once this method is called.
+     * Methods that create transactions throw an exception if a closing operation is pending.
+     */
+    close() {
+        this.db.close();
     }
 
 }

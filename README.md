@@ -130,6 +130,9 @@ await store.count();
 await store.count(query);
 await store.clear();
 
+await store.close(); // Don't use it after closing 
+delete store;
+
 // specify create options if a store maybe doesn't exist
 const mystoreai = await new IndexedDBObjectStore("my-db", "my-storeai", {autoIncrement: true, version: 2})
 // if this creates a new store you have to increase the version again
