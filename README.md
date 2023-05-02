@@ -26,9 +26,7 @@ let db;
 const DBOpenRequest = window.indexedDB.open('db-test');
 
 DBOpenRequest.onerror = event => console.error("Error loading database.");
-DBOpenRequest.onsuccess = event => {
-    db = DBOpenRequest.result;
-};
+DBOpenRequest.onsuccess = event => {db = DBOpenRequest.result;};
 
 // writing to the database
 let transaction = db
