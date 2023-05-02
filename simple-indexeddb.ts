@@ -142,7 +142,7 @@ class IndexedDBObjectStore {
      * @param {undefined|number} count - Number of things to return
      */
     getAll(query?: IDBKeyRange | IDBValidKey, count?: number) {
-        const { promise, reject, resolve } = makePromise<number>();
+        const { promise, reject, resolve } = makePromise<unknown>();
         const transaction = this.db
             .transaction([this.objectstorename])
             .objectStore(this.objectstorename)
