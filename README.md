@@ -2,13 +2,13 @@
 
 A simple indexedDB wrapper.
 
-## Usage
+## First Look:
 
 ```js
-import IndexedDBObjectStore from "simple-indexeddb"
+import {IndexedDBObjectStore, createIndexeddatabase} from "simple-indexeddb"
 // or just copy the code into your file its only ~200 lines of code
-
-const store = await new IndexedDBObjectStore("my-db", "my-store")
+await createIndexeddatabase("my-db", {mystore: {});
+const store = await new IndexedDBObjectStore("my-db", "mystore")
 await store.put("test", 137)
 console.log(await store.get("test")) // 137
 ```
@@ -64,7 +64,9 @@ about ~200 lines of code, and you could take out the methods you don't need. Thi
 your project without having to install it as a dependency. There is a [simple-indexeddb.ts](./simple-indexeddb.ts)
 and [simple-indexeddb.js](./simple-indexeddb.js) version.
 
-## Creating Databases:
+## Usage:
+
+### Creating Databases:
 
 Creating databases can be quite confusing using indexedDB. Use the  `createIndexeddatabase` function to create many
 databases easily in a single transaction. The function returns a promise that resolves to the latest version number.
@@ -87,7 +89,7 @@ at [here](https://developer.mozilla.org/en-US/docs/Web/API/IndexedDB_API/Using_I
 The `createIndexeddatabase` function also accepts `Map` objects. There is a [create-indexeddatabase.ts](./create-indexeddatabase.ts)
 and [create-indexeddatabase.js](./create-indexeddatabase.js) version.
 
-## IndexedDBObjectStore Interface:
+## Interacting With the Database Objectstores:
 
 Now that you have a database you can interact with it using the `IndexedDBObjectStore` class. I have implemented most of
 the methods
