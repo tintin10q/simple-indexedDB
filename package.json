@@ -1,16 +1,28 @@
 {
-  "name": "simple-indexedb",
+  "name": "simple-indexeddb",
   "version": "1.0.0",
   "author": "tintin10q",
   "description": "A simple indexedDB wrapper",
-  "license": "GNU-GPL-v3",
+  "license": "GPL-3.0-only",
+  "homepage": "https://github.com/tintin10q/simple-indexedDB",
+  "repository": "https://github.com/tintin10q/simple-indexedDB",
+  "scripts": {
+    "build": "tsc create-indexeddatabase.ts simple-indexeddb.ts --target esnext"
+  },
   "files": [
     "simple-indexeddb.js",
-    "simple-indexeddb.ts"
+    "simple-indexeddb.ts",
+    "index.ts"
   ],
+
   "readme": "README.md",
+  "type": "module",
   "keywords": [
     "indexedDB",
-    "simple"
-  ]
+    "simple",
+    "database"
+  ],
+  "devDependencies": {
+    "typescript": "^5.0.4"
+  }
 }
