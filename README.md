@@ -140,4 +140,22 @@ const apples = await new IndexedDBObjectStore("my-db", "my-storeai", {autoIncrem
 // its easier to use the createIndexeddatabase function to create databases.
 ```
 
+## Download
+
+You easily can download the files using:
+
+### ts-version
+
+```bash
+wget https://raw.githubusercontent.com/tintin10q/simple-indexedDB/main/simple-indexeddb.ts
+wget https://raw.githubusercontent.com/tintin10q/simple-indexedDB/main/create-indexeddatabase.ts
+```
+
+### js-version
+
+```bash
+wget https://raw.githubusercontent.com/tintin10q/simple-indexedDB/main/simple-indexeddb.js 
+wget https://raw.githubusercontent.com/tintin10q/simple-indexedDB/main/create-indexeddatabase.js
+```
+
 Feel free to submit a pull request.
