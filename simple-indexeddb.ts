@@ -13,15 +13,6 @@ function makePromise<T>() {
 
 type CreateOptions = IDBObjectStoreParameters & { version?: number }
 
-interface Event {
-    target: Event["target"] & { result: IDBDatabase };
-}
-
-interface IDBVersionChangeEvent {
-    target: IDBVersionChangeEvent["target"] & { result: IDBDatabase };
-}
-
-
 /**
  * @class IndexeDBObjectStore
  * A simple promise based wrapper for an indexedDB object store
@@ -38,22 +29,18 @@ class IndexedDBObjectStore {
     objectstorename: string;
 
     constructor(dbname: string, objectstorename: string, createOptions?: CreateOptions) {
-        const {
-            promise,
-            reject,
-            resolve
-        } = makePromise();
+        const { promise, reject, resolve } = makePromise<this>();
         let request = indexedDB.open(dbname, createOptions?.version);
         request.onupgradeneeded = (event) => {
-            this.db = event.target.result;
+            this.db = event.target!.result;
             if (!this.db.objectStoreNames.contains(objectstorename)) {
                 this.db.createObjectStore(objectstorename, createOptions);
             }
             // resolve(this);
-        }
+        };
         request.onerror = reject;
         request.onsuccess = (event) => {
-            this.db = event.target.result;
+            this.db = event.target!.result;
             // turn on if you want db to automatically close on version change,
             // if you leave it off tabs have to be reloaded before version change can happen or manual close
             // this.db.onversionchange = () => this.db.close();
@@ -69,17 +56,16 @@ class IndexedDBObjectStore {
      * @param {string} key
      */
     getJson(key: IDBValidKey) {
-        const {
-            promise,
-            reject,
-            resolve
-        } = makePromise();
+        const { promise, reject, resolve } = makePromise();
 
-        const transaction = this.db.transaction([this.objectstorename]).objectStore(this.objectstorename).get(key);
+        const transaction = this.db
+            .transaction([this.objectstorename])
+            .objectStore(this.objectstorename)
+            .get(key);
 
         transaction.onsuccess = (event) => {
             try {
-                let store = event.target.result;
+                let store = event.target!.result;
                 if (typeof store === "undefined") reject(`${key} is undefined`);
                 resolve(JSON.parse(store));
             } catch (e) {
@@ -94,17 +80,16 @@ class IndexedDBObjectStore {
      * @param {IDBValidKey | IDBKeyRange} key
      */
     get(key: IDBValidKey | IDBKeyRange) {
-        const {
-            promise,
-            reject,
-            resolve
-        } = makePromise();
+        const { promise, reject, resolve } = makePromise();
 
-        const transaction = this.db.transaction([this.objectstorename]).objectStore(this.objectstorename).get(key);
+        const transaction = this.db
+            .transaction([this.objectstorename])
+            .objectStore(this.objectstorename)
+            .get(key);
 
         transaction.onsuccess = (event) => {
             try {
-                resolve(event.target.result);
+                resolve(event.target!.result);
             } catch (e) {
                 reject(`Could not load ${name} store: ${e}`);
             }
@@ -119,15 +104,14 @@ class IndexedDBObjectStore {
      * @param {IDBValidKey|undefined} key
      */
     put(data: any, key?: IDBValidKey) {
-        const {
-            promise,
-            reject,
-            resolve
-        } = makePromise();
+        const { promise, reject, resolve } = makePromise();
 
-        const transaction = this.db.transaction([this.objectstorename], "readwrite").objectStore(this.objectstorename).put(data, key);
+        const transaction = this.db
+            .transaction([this.objectstorename], "readwrite")
+            .objectStore(this.objectstorename)
+            .put(data, key);
 
-        transaction.onsuccess = (event) => resolve(event.target.result);
+        transaction.onsuccess = (event) => resolve(event.target!.result);
         transaction.onerror = reject;
         return promise;
     }
@@ -139,18 +123,14 @@ class IndexedDBObjectStore {
      * @param {IDBValidKey|undefined} key - Key under which to save, can be undefined
      */
     add(data: any, key?: IDBValidKey) {
-        const {
-            promise,
-            reject,
-            resolve
-        } = makePromise();
+        const { promise, reject, resolve } = makePromise();
 
         const transaction = this.db
             .transaction([this.objectstorename], "readwrite")
             .objectStore(this.objectstorename)
             .add(data, key);
 
-        transaction.onsuccess = (event) => resolve(event.target.result);
+        transaction.onsuccess = (event) => resolve(event.target!.result);
         transaction.onerror = reject;
         return promise;
     }
@@ -162,14 +142,13 @@ class IndexedDBObjectStore {
      * @param {undefined|number} count - Number of things to return
      */
     getAll(query?: IDBKeyRange | IDBValidKey, count?: number) {
-        const {
-            promise,
-            reject,
-            resolve
-        } = makePromise();
-        const transaction = this.db.transaction([this.objectstorename]).objectStore(this.objectstorename).getAll(query, count);
+        const { promise, reject, resolve } = makePromise<number>();
+        const transaction = this.db
+            .transaction([this.objectstorename])
+            .objectStore(this.objectstorename)
+            .getAll(query, count);
 
-        transaction.onsuccess = (event) => resolve(event.target.result);
+        transaction.onsuccess = (event) => resolve(event.target!.result);
         transaction.onerror = reject;
         return promise;
     }
@@ -177,15 +156,14 @@ class IndexedDBObjectStore {
     /**
      * Clear the entire object store. **This removes all key value pairs in the object store**
      */
-    clear(): Promise<undefined> {
-        const {
-            promise,
-            reject,
-            resolve
-        } = makePromise();
-        const transaction = this.db.transaction([this.objectstorename], "readwrite").objectStore(this.objectstorename).clear();
+    clear(): Promise<Event> {
+        const { promise, reject, resolve } = makePromise<Event>();
+        const transaction = this.db
+            .transaction([this.objectstorename], "readwrite")
+            .objectStore(this.objectstorename)
+            .clear();
 
-        transaction.onsuccess = (event) => resolve(event.target.result);
+        transaction.onsuccess = (event) => resolve(event);
         transaction.onerror = reject;
         return promise;
     }
@@ -196,14 +174,13 @@ class IndexedDBObjectStore {
      * @param {undefined| IDBKeyRange | string} query
      */
     count(query?: IDBKeyRange | string): Promise<number> {
-        const {
-            promise,
-            reject,
-            resolve
-        } = makePromise();
-        const transaction = this.db.transaction([this.objectstorename]).objectStore(this.objectstorename).count(query);
+        const { promise, reject, resolve } = makePromise<number>();
+        const transaction = this.db
+            .transaction([this.objectstorename])
+            .objectStore(this.objectstorename)
+            .count(query);
 
-        transaction.onsuccess = (event) => resolve(event.target.result);
+        transaction.onsuccess = (event) => resolve(event.target!.result);
         transaction.onerror = reject;
         return promise;
     }
@@ -212,15 +189,14 @@ class IndexedDBObjectStore {
      * Get a indexed db request object for a certain key
      * @param {IDBValidKey | IDBKeyRange} key
      */
-    getKey(key: IDBValidKey | IDBKeyRange): Promise<string> {
-        const {
-            promise,
-            reject,
-            resolve
-        } = makePromise();
-        const transaction = this.db.transaction([this.objectstorename]).objectStore(this.objectstorename).getKey(key);
+    getKey(key: IDBValidKey | IDBKeyRange): Promise<IDBValidKey> {
+        const { promise, reject, resolve } = makePromise<IDBValidKey>();
+        const transaction = this.db
+            .transaction([this.objectstorename])
+            .objectStore(this.objectstorename)
+            .getKey(key);
 
-        transaction.onsuccess = (event) => resolve(event.target.result);
+        transaction.onsuccess = (event) => resolve(event.target!.result);
         transaction.onerror = reject;
         return promise;
     }
@@ -231,15 +207,14 @@ class IndexedDBObjectStore {
      * @param {IDBKeyRange|IDBValidKey} query
      * @param {undefined|number} count
      */
-    getAllKeys(query?: IDBKeyRange | IDBValidKey, count?: number): Promise<string[]> {
-        const {
-            promise,
-            reject,
-            resolve
-        } = makePromise();
-        const transaction = this.db.transaction([this.objectstorename]).objectStore(this.objectstorename).getAllKeys();
+    getAllKeys(query?: IDBKeyRange | IDBValidKey, count?: number): Promise<IDBValidKey[]> {
+        const { promise, reject, resolve } = makePromise<IDBValidKey[]>();
+        const transaction = this.db
+            .transaction([this.objectstorename])
+            .objectStore(this.objectstorename)
+            .getAllKeys(query, count);
 
-        transaction.onsuccess = (event) => resolve(event.target.result);
+        transaction.onsuccess = (event) => resolve(event.target!.result);
         transaction.onerror = reject;
         return promise;
     }
@@ -248,13 +223,12 @@ class IndexedDBObjectStore {
      * Delete one specific key value pair from the object store.
      * @param {IDBValidKey} key
      */
-    delete(key: IDBValidKey | IDBKeyRange): Promise<undefined> {
-        const {
-            promise,
-            reject,
-            resolve
-        } = makePromise();
-        const transaction = this.db.transaction([this.objectstorename], "readwrite").objectStore(this.objectstorename).delete(key);
+    delete(key: IDBValidKey | IDBKeyRange): Promise<Event> {
+        const { promise, reject, resolve } = makePromise<Event>();
+        const transaction = this.db
+            .transaction([this.objectstorename], "readwrite")
+            .objectStore(this.objectstorename)
+            .delete(key);
 
         transaction.onsuccess = (event) => resolve(event);
         transaction.onerror = reject;
@@ -271,7 +245,7 @@ class IndexedDBObjectStore {
     close() {
         this.db.close();
     }
-
 }
+
 
 export default IndexedDBObjectStore;

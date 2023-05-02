@@ -42,7 +42,8 @@ async function createIndexeddatabase(dbname, objectStores) {
     /* Create the new database if needed */
     {
         const { promise, reject, resolve } = makePromise();
-        if (to_create.length) { // true if we need to update
+        if (to_create.length) {
+            // true if we need to update
             const request = indexedDB.open(dbname, ++version); // closes other db
             request.onupgradeneeded = (event) => {
                 const db = event.target.result;
@@ -62,5 +63,4 @@ async function createIndexeddatabase(dbname, objectStores) {
         return promise;
     }
 }
-
 export default createIndexeddatabase;

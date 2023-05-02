@@ -51,7 +51,10 @@ class IndexedDBObjectStore {
      */
     getJson(key) {
         const { promise, reject, resolve } = makePromise();
-        const transaction = this.db.transaction([this.objectstorename]).objectStore(this.objectstorename).get(key);
+        const transaction = this.db
+            .transaction([this.objectstorename])
+            .objectStore(this.objectstorename)
+            .get(key);
         transaction.onsuccess = (event) => {
             try {
                 let store = event.target.result;
@@ -71,7 +74,10 @@ class IndexedDBObjectStore {
      */
     get(key) {
         const { promise, reject, resolve } = makePromise();
-        const transaction = this.db.transaction([this.objectstorename]).objectStore(this.objectstorename).get(key);
+        const transaction = this.db
+            .transaction([this.objectstorename])
+            .objectStore(this.objectstorename)
+            .get(key);
         transaction.onsuccess = (event) => {
             try {
                 resolve(event.target.result);
@@ -90,7 +96,10 @@ class IndexedDBObjectStore {
      */
     put(data, key) {
         const { promise, reject, resolve } = makePromise();
-        const transaction = this.db.transaction([this.objectstorename], "readwrite").objectStore(this.objectstorename).put(data, key);
+        const transaction = this.db
+            .transaction([this.objectstorename], "readwrite")
+            .objectStore(this.objectstorename)
+            .put(data, key);
         transaction.onsuccess = (event) => resolve(event.target.result);
         transaction.onerror = reject;
         return promise;
@@ -119,7 +128,10 @@ class IndexedDBObjectStore {
      */
     getAll(query, count) {
         const { promise, reject, resolve } = makePromise();
-        const transaction = this.db.transaction([this.objectstorename]).objectStore(this.objectstorename).getAll(query, count);
+        const transaction = this.db
+            .transaction([this.objectstorename])
+            .objectStore(this.objectstorename)
+            .getAll(query, count);
         transaction.onsuccess = (event) => resolve(event.target.result);
         transaction.onerror = reject;
         return promise;
@@ -129,8 +141,11 @@ class IndexedDBObjectStore {
      */
     clear() {
         const { promise, reject, resolve } = makePromise();
-        const transaction = this.db.transaction([this.objectstorename], "readwrite").objectStore(this.objectstorename).clear();
-        transaction.onsuccess = (event) => resolve(event.target.result);
+        const transaction = this.db
+            .transaction([this.objectstorename], "readwrite")
+            .objectStore(this.objectstorename)
+            .clear();
+        transaction.onsuccess = (event) => resolve(event);
         transaction.onerror = reject;
         return promise;
     }
@@ -141,7 +156,10 @@ class IndexedDBObjectStore {
      */
     count(query) {
         const { promise, reject, resolve } = makePromise();
-        const transaction = this.db.transaction([this.objectstorename]).objectStore(this.objectstorename).count(query);
+        const transaction = this.db
+            .transaction([this.objectstorename])
+            .objectStore(this.objectstorename)
+            .count(query);
         transaction.onsuccess = (event) => resolve(event.target.result);
         transaction.onerror = reject;
         return promise;
@@ -152,7 +170,10 @@ class IndexedDBObjectStore {
      */
     getKey(key) {
         const { promise, reject, resolve } = makePromise();
-        const transaction = this.db.transaction([this.objectstorename]).objectStore(this.objectstorename).getKey(key);
+        const transaction = this.db
+            .transaction([this.objectstorename])
+            .objectStore(this.objectstorename)
+            .getKey(key);
         transaction.onsuccess = (event) => resolve(event.target.result);
         transaction.onerror = reject;
         return promise;
@@ -165,7 +186,10 @@ class IndexedDBObjectStore {
      */
     getAllKeys(query, count) {
         const { promise, reject, resolve } = makePromise();
-        const transaction = this.db.transaction([this.objectstorename]).objectStore(this.objectstorename).getAllKeys();
+        const transaction = this.db
+            .transaction([this.objectstorename])
+            .objectStore(this.objectstorename)
+            .getAllKeys(query, count);
         transaction.onsuccess = (event) => resolve(event.target.result);
         transaction.onerror = reject;
         return promise;
@@ -176,7 +200,10 @@ class IndexedDBObjectStore {
      */
     delete(key) {
         const { promise, reject, resolve } = makePromise();
-        const transaction = this.db.transaction([this.objectstorename], "readwrite").objectStore(this.objectstorename).delete(key);
+        const transaction = this.db
+            .transaction([this.objectstorename], "readwrite")
+            .objectStore(this.objectstorename)
+            .delete(key);
         transaction.onsuccess = (event) => resolve(event);
         transaction.onerror = reject;
         return promise;
