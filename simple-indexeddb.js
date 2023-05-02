@@ -1,4 +1,5 @@
 // @ts-nocheck
+/* Allows to resolve a promise outside the promise */
 function makePromise() {
     let resolve;
     let reject;
@@ -6,11 +7,7 @@ function makePromise() {
         resolve = res;
         reject = rej;
     });
-    return {
-        resolve,
-        reject,
-        promise
-    };
+    return { resolve, reject, promise };
 }
 /**
  * @class IndexeDBObjectStore
@@ -185,4 +182,5 @@ class IndexedDBObjectStore {
         return promise;
     }
 }
+
 export default IndexedDBObjectStore;

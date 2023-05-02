@@ -26,7 +26,9 @@ let db;
 const DBOpenRequest = window.indexedDB.open('db-test');
 
 DBOpenRequest.onerror = event => console.error("Error loading database.");
-DBOpenRequest.onsuccess = event => {db = DBOpenRequest.result;};
+DBOpenRequest.onsuccess = event => {
+    db = DBOpenRequest.result;
+};
 
 // writing to the database
 let transaction = db
@@ -64,11 +66,36 @@ about ~200 lines of code, and you could take out the methods you don't need. Thi
 your project without having to install it as a dependency. There is a [simple-indexeddb.ts](./simple-indexeddb.ts)
 and [simple-indexeddb.js](./simple-indexeddb.js) version.
 
-## Interface:
+## Creating Databases:
 
-I have implemented most of the methods
+Creating databases can be quite confusing using indexedDB. Use the  `createIndexeddatabase` function to create many
+databases easily in a single transaction. The function returns a promise that resolves to the latest version number.
+Changes are only made to the database if needed.
+
+```ts
+import createIndexeddatabase from "create-indexeddatabase" // or just copy the file
+
+// creates the animals, plants, trees, and flowers datastores in the garden database. 
+await createIndexeddatabase("garden", {
+    animals: {keyPath: "id", autoIncrement: false},
+    plants: {keyPath: "id", autoIncrement: true},
+    trees: {autoIncrement: true},
+    flowers: {}, // default = {keyPath: null, autoIncrement: false}
+})
+```
+
+If you don't know what these options mean then look
+at [here](https://developer.mozilla.org/en-US/docs/Web/API/IndexedDB_API/Using_IndexedDB#structuring_the_database).
+The `createIndexeddatabase` function also accepts `Map` objects. There is a [create-indexeddatabase.ts](./create-indexeddatabase.ts)
+and [create-indexeddatabase.js](./create-indexeddatabase.js) version.
+
+## IndexedDBObjectStore Interface:
+
+Now that you have a database you can interact with it using the `IndexedDBObjectStore` class. I have implemented most of
+the methods
 from [IDBObjectStore](https://developer.mozilla.org/en-US/docs/Web/API/IDBObjectStore) but none of the cursor/index
-stuff (yet).
+stuff (yet). This class automatically sets up transactions for you with
+a [IDBDatabase](https://developer.mozilla.org/en-US/docs/Web/API/IDBDatabase) object.
 
 ```ts
 const key = "Test";
@@ -86,8 +113,8 @@ console.log(store.db, store.dbname, store.objectstorename)
 await store.add(data, key); // use to add key value pairs
 await store.put(data, key); // use to update key value pairs
 
-await store.add(data); 
-await store.put(data); // leave our key if your key mode allows it 
+await store.add(data);
+await store.put(data); // leave key out if your key mode allows it  
 
 await store.get(key);
 await store.getJson(key);
@@ -107,10 +134,7 @@ await store.clear();
 const mystoreai = await new IndexedDBObjectStore("my-db", "my-storeai", {autoIncrement: true, version: 2})
 // if this creates a new store you have to increase the version again
 const apples = await new IndexedDBObjectStore("my-db", "my-storeai", {autoIncrement: true, version: 3})
+// its easier to use the createIndexeddatabase function to create databases.
 ```
-
-## Todo 
-
-- [] `createObjectStores()` function to create multiple object stores in one go (if they don't exist yet).
 
 Feel free to submit a pull request.

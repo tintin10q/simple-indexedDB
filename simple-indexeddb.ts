@@ -1,23 +1,26 @@
 // @ts-nocheck
-function makePromise() {
-    let resolve;
-    let reject;
-    const promise = new Promise((res, rej) => {
+
+/* Allows to resolve a promise outside the promise */
+function makePromise<T>() {
+    let resolve!: (value: T) => void;
+    let reject!: (reason?: any) => void;
+    const promise = new Promise<T>((res, rej) => {
         resolve = res;
-        reject = rej
-    })
-    return {
-        resolve,
-        reject,
-        promise
-    }
+        reject = rej;
+    });
+    return {resolve, reject, promise};
 }
 
-type CreateOptions = {
-    autoIncrement?: boolean;
-    keyPath?: string;
-    version?: number;
+type CreateOptions = IDBObjectStoreParameters & { version?: number }
+
+interface Event {
+    target: Event["target"] & { result: IDBDatabase };
 }
+
+interface IDBVersionChangeEvent {
+    target: IDBVersionChangeEvent["target"] & { result: IDBDatabase };
+}
+
 
 /**
  * @class IndexeDBObjectStore
