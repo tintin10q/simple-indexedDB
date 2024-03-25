@@ -1,6 +1,6 @@
 # simple-indexedDB
 
-A simple indexedDB wrapper.
+A simple indexedDB promised based wrapper class.
 
 ## First Look:
 
